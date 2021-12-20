@@ -17,6 +17,8 @@ class LoginViewController: UIViewController {
         
         setButton()
         setInfoTextField()
+        // move view when keyboard change frame
+        getKeyboardStatus()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -28,7 +30,37 @@ class LoginViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-
+    
+    // MARK: - Override methods
+    
+    // Hide keyboard by touching on screen
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super .touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
+    // MARK: - IBActions
+    
+    @objc func keyboardWillBeShown(_ notification: NSNotification) {
+        
+        // move view when keyboard shows up
+        let heigthChange: CGFloat = 20
+        view.frame.origin.y = 0 - heigthChange
+    }
+    
+    @objc func keyboardWillBeHidden(_ notification: NSNotification) {
+        
+        // move view back to normal
+        view.frame.origin.y = 0
+    }
+    
+    // MARK: Private Methods
+    
+    private func setTextFields() {
+        userInformationTF.returnKeyType = .done
+        userInformationTF.enablesReturnKeyAutomatically = true
+    }
+    
     private func setButton() {
         loginButton.layer.cornerRadius = 12
     }
@@ -40,6 +72,15 @@ class LoginViewController: UIViewController {
         userInformationTF.layer.borderColor = lightGreenColor.cgColor
         userInformationTF.layer.borderWidth = 2
         userInformationTF.layer.cornerRadius = 10
+    }
+    
+    // Keyboard
+    private func getKeyboardStatus() {
+        
+        // Listen for keyboard events
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeShown(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
