@@ -8,10 +8,13 @@
 import UIKit
 
 class LoginViewController: UIViewController {
+    
+    // MARK: - IBOutlets
 
     @IBOutlet weak var userInformationTF: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,6 +29,7 @@ class LoginViewController: UIViewController {
         loginButton.setGreenGradient()
     }
     
+    // MARK: - Override Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard userInformationTF.text != nil, userInformationTF.text != "" else {
             let title = "Invilid name\n"
@@ -56,7 +60,7 @@ class LoginViewController: UIViewController {
     @objc func keyboardWillBeShown(_ notification: NSNotification) {
         
         // move view when keyboard shows up
-        let heigthChange: CGFloat = 20
+        let heigthChange: CGFloat = 80
         view.frame.origin.y = 0 - heigthChange
     }
     
@@ -81,6 +85,7 @@ class LoginViewController: UIViewController {
         
         let lightGreenColor = UIColor(red: 0.097, green: 0.969, blue: 0.792, alpha: 1)
         
+        userInformationTF.delegate = self
         userInformationTF.layer.borderColor = lightGreenColor.cgColor
         userInformationTF.layer.borderWidth = 2
         userInformationTF.layer.cornerRadius = 10

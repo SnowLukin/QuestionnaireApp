@@ -31,6 +31,10 @@ class ResultViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 extension ResultViewController {

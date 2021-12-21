@@ -24,10 +24,18 @@ class QuestionViewController: UIViewController {
     @IBOutlet var multipleAnswerViews: [UIView]!
     @IBOutlet weak var multipleAnswerButton: UIButton!
     
-    @IBOutlet weak var rangeAnswerSlider: UISlider!
+    @IBOutlet weak var rangeAnswerSlider: UISlider! {
+        didSet {
+            let answerCount = Float(currentAnswers.count - 1)
+            
+            rangeAnswerSlider.maximumValue = answerCount
+            rangeAnswerSlider.value = answerCount / 2
+        }
+    }
     @IBOutlet var rangeAnswerLabels: [UILabel]!
     @IBOutlet weak var rangeAnswerButton: UIButton!
     
+    @IBOutlet weak var progressBar: UIProgressView!
     // MARK: Private Properties
     private let questions = Question.getQuestions()
     private var questionIndex = 0
@@ -49,9 +57,14 @@ class QuestionViewController: UIViewController {
         rangeAnswerButton.setGreenGradient()
     }
     
+    // MARK: - Override Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let resultVC = segue.destination as! ResultViewController
         resultVC.answers = answersChoosen
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     // MARK: - IBActions
@@ -95,7 +108,8 @@ extension QuestionViewController {
     }
     
     private func setContainerView() {
-        containerView.layer.cornerRadius = 20
+        containerView.layer.cornerRadius = 30
+        containerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
     }
     
     private func setButtons() {
@@ -121,10 +135,10 @@ extension QuestionViewController {
         let currentQuestion = questions[questionIndex]
         questionLabel.text = currentQuestion.title
         
-//        let totalProgress = Float(questionIndex) / Float(questions.count)
-//        questionProgressView.setProgress(totalProgress, animated: true)
+        let totalProgress = Float(questionIndex) / Float(questions.count)
+        progressBar.setProgress(totalProgress, animated: true)
         
-        title = "Вопрос № \(questionIndex + 1) из \(questions.count)"
+        title = "Question \(questionIndex + 1) / \(questions.count)"
         
         showCurrentAnswers(for: currentQuestion.type)
     }

@@ -15,33 +15,33 @@ struct Question {
     static func getQuestions() -> [Question] {
         [
             Question(
-                title: "Какую пищу предпочитаете?",
+                title: "What meal you prefer?",
                 type: .single,
                 answers: [
-                    Answer(title: "Стейк", type: .dog),
-                    Answer(title: "Рыба", type: .cat),
-                    Answer(title: "Морковь", type: .rabbit),
-                    Answer(title: "Кукуруза", type: .turtle)
+                    Answer(title: "Steak", type: .dog),
+                    Answer(title: "Fish", type: .cat),
+                    Answer(title: "Carrot", type: .rabbit),
+                    Answer(title: "Corn", type: .turtle)
                          ]
             ),
             Question(
-                title: "Что вам нравиться больше?",
+                title: "What do you like the most?",
                 type: .multiple,
                 answers: [
-                    Answer(title: "Плавать", type: .dog),
-                    Answer(title: "Спать", type: .cat),
-                    Answer(title: "Обниматься", type: .rabbit),
-                    Answer(title: "Есть", type: .turtle)
+                    Answer(title: "Swim", type: .dog),
+                    Answer(title: "Sleep", type: .cat),
+                    Answer(title: "Hug", type: .rabbit),
+                    Answer(title: "Eat", type: .turtle)
                 ]
             ),
             Question(
-                title: "Любите ли вы поездки на машине?",
+                title: "Do you like driving?",
                 type: .ranged,
                 answers: [
-                    Answer(title: "Ненавижу", type: .cat),
-                    Answer(title: "Нервничаю", type: .rabbit),
-                    Answer(title: "Не замечаю", type: .turtle),
-                    Answer(title: "Обожаю", type: .dog)
+                    Answer(title: "Hate", type: .cat),
+                    Answer(title: "Nervous", type: .rabbit),
+                    Answer(title: "Not interested", type: .turtle),
+                    Answer(title: "Adore", type: .dog)
                 ]
             )
         ]
@@ -68,13 +68,13 @@ enum AnimalType: Character {
     var definition: String {
         switch self {
         case .dog:
-            return "Вам нравится быть с друзьями. Вы окружаете себя людьми, которые вам нравяться и всегда готовы помочь."
+            return "You like being with friends. You love being among people who you like and who always ready to help."
         case .cat:
-            return "Вы любите гулять сами по себе и цените одиночество."
+            return "You enjoy being lonely and especially take a walk alone."
         case .rabbit:
-            return "Вам нравится все мягкое. Вы здоровы и полны энергии."
+            return "You love everything soft. You healthy and full of joy."
         case .turtle:
-            return "Ваша сила - в мудрости. Медленный и вдумчивый выигрывает на больших дистанциях."
+            return "Your power – wiseness. Slow and thoughtful people win long distanses"
         }
     }
 }
