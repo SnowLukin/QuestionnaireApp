@@ -21,10 +21,18 @@ class LoginViewController: UIViewController {
         getKeyboardStatus()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         loginButton.setGreenGradient()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard userInformationTF.text != nil, userInformationTF.text != "" else {
+            let title = "Invilid name\n"
+            let message = "Please enter your name and try again.\n"
+            invalidInputAlert(title: title, message: message)
+            return
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -40,6 +48,10 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: - IBActions
+    
+    @IBAction func unwind(for unwindSegue: UIStoryboardSegue) {
+        userInformationTF.text = nil
+    }
     
     @objc func keyboardWillBeShown(_ notification: NSNotification) {
         
@@ -62,7 +74,7 @@ class LoginViewController: UIViewController {
     }
     
     private func setButton() {
-        loginButton.layer.cornerRadius = 12
+        loginButton.setCustomContainerView()
     }
     
     private func setInfoTextField() {
@@ -84,19 +96,23 @@ class LoginViewController: UIViewController {
     }
 }
 
-extension UIView {
-    func setGreenGradient() {
-        let gradientLayer = CAGradientLayer()
+// MARK: Alerts
+extension LoginViewController {
+    private func invalidInputAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
         
-        let lightGreenColor = UIColor(red: 0.097, green: 0.969, blue: 0.792, alpha: 1)
-        let greenColor = UIColor(red: 0.254, green: 0.643, blue: 0.668, alpha: 1)
-        
-        gradientLayer.colors = [greenColor.cgColor, lightGreenColor.cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 0)
-        gradientLayer.frame = self.bounds
-        gradientLayer.cornerRadius = 12
-        
-        self.layer.insertSublayer(gradientLayer, at: 0)
+        alert.setNeededFont()
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+}
+
+// MARK: TextField
+extension LoginViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        performSegue(withIdentifier: "LogInSegue", sender: self)
+        return true
     }
 }

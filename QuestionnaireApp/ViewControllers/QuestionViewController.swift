@@ -9,11 +9,12 @@ import UIKit
 
 class QuestionViewController: UIViewController {
 
+    // MARK: IBOutlets
     @IBOutlet weak var singleAnswerStackView: UIStackView!
     @IBOutlet weak var multipleAnswerStackView: UIStackView!
+    @IBOutlet weak var rangeAnswerStackView: UIStackView!
     
     @IBOutlet weak var questionLabel: UILabel!
-    
     @IBOutlet weak var containerView: UIView!
     
     @IBOutlet var singleAnswerButtons: [UIButton]!
@@ -23,7 +24,11 @@ class QuestionViewController: UIViewController {
     @IBOutlet var multipleAnswerViews: [UIView]!
     @IBOutlet weak var multipleAnswerButton: UIButton!
     
+    @IBOutlet weak var rangeAnswerSlider: UISlider!
+    @IBOutlet var rangeAnswerLabels: [UILabel]!
+    @IBOutlet weak var rangeAnswerButton: UIButton!
     
+    // MARK: Private Properties
     private let questions = Question.getQuestions()
     private var questionIndex = 0
     private var answersChoosen: [Answer] = []
@@ -31,21 +36,22 @@ class QuestionViewController: UIViewController {
         questions[questionIndex].answers
     }
     
-    
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setIBElements()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         multipleAnswerButton.setGreenGradient()
+        rangeAnswerButton.setGreenGradient()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let resultVC = segue.destination as! ResultViewController
+        resultVC.answers = answersChoosen
     }
     
     // MARK: - IBActions
@@ -69,6 +75,14 @@ class QuestionViewController: UIViewController {
         nextQuestion()
     }
     
+    @IBAction func rangeAnswerButtonPressed() {
+        let index = lrintf(rangeAnswerSlider.value)
+        answersChoosen.append(currentAnswers[index])
+        
+        nextQuestion()
+    }
+    
+    
 }
 
 extension QuestionViewController {
@@ -86,27 +100,21 @@ extension QuestionViewController {
     
     private func setButtons() {
         for button in singleAnswerButtons {
-            button.backgroundColor = .white
-            button.layer.cornerRadius = 12
-            button.layer.borderWidth = 2
-            button.layer.borderColor = UIColor.systemGray.cgColor
+            button.setCustomContainerView()
         }
         
-        multipleAnswerButton.layer.cornerRadius = 12
-        multipleAnswerButton.layer.borderWidth = 2
-        multipleAnswerButton.layer.borderColor = UIColor.systemGray.cgColor
+        multipleAnswerButton.setCustomContainerView()
+        rangeAnswerButton.setCustomContainerView()
     }
     
     private func setMultipleAnswerContainerViews() {
         for view in multipleAnswerViews {
-            view.layer.cornerRadius = 12
-            view.layer.borderWidth = 2
-            view.layer.borderColor = UIColor.systemGray.cgColor
+            view.setCustomContainerView()
         }
     }
     
     private func setupUI() {
-        for stackView in [singleAnswerStackView, multipleAnswerStackView] {
+        for stackView in [singleAnswerStackView, multipleAnswerStackView, rangeAnswerStackView] {
             stackView?.isHidden = true
         }
         
@@ -128,8 +136,7 @@ extension QuestionViewController {
         case .multiple:
             showMultipleStackView(with: currentAnswers)
         case .ranged:
-            break
-//           showRangedStackView(with: currentAnswers)
+           showRangedStackView(with: currentAnswers)
         }
     }
     
@@ -149,6 +156,13 @@ extension QuestionViewController {
         }
     }
     
+    private func showRangedStackView(with answers: [Answer]) {
+        rangeAnswerStackView.isHidden = false
+        
+        rangeAnswerLabels.first?.text = answers.first?.title
+        rangeAnswerLabels.last?.text = answers.last?.title
+    }
+    
     private func nextQuestion() {
         questionIndex += 1
         
@@ -156,7 +170,6 @@ extension QuestionViewController {
             setupUI()
             return
         }
-        
         performSegue(withIdentifier: "showResult", sender: nil)
     }
 }
